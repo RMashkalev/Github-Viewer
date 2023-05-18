@@ -6,9 +6,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -40,9 +41,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun authenticateWithGitHub(token: String) {
-        val call = apiService.getUserRepositories("token $token")
-        call.enqueue(object : Callback<List<RepositoryDetails>> {
-            override fun onResponse(call: Call<List<RepositoryDetails>>, response: Response<List<RepositoryDetails>>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    apiService.getUserRepositories("token $token").execute()
+                }
+
                 if (response.isSuccessful) {
                     val user = response.body()
                     if (user != null) {
@@ -50,16 +54,23 @@ class MainActivity : AppCompatActivity() {
                         intent.putExtra("token", token)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(this@MainActivity, "Ошибка получения данных пользователя", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Ошибка получения данных пользователя",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "Ошибка аутентификации", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Ошибка аутентификации", Toast.LENGTH_SHORT)
+                        .show()
                 }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Ошибка при выполнении запроса",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
-            override fun onFailure(call: Call<List<RepositoryDetails>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Ошибка при выполнении запроса", Toast.LENGTH_SHORT).show()
-            }
-        })
+        }
     }
 }
