@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.mainFrame, StartFragment.newInstance())
+            .replace(R.id.mainFrame, LoadingFragment.newInstance())
             .commit()
 
         dataModel.token.observe(this) {
@@ -25,10 +25,13 @@ class MainActivity : AppCompatActivity() {
             when (it) {
                 1 -> supportFragmentManager
                     .beginTransaction()
+                    .replace(R.id.mainFrame, LoadingFragment.newInstance())
+                    .commit()
+                2 -> supportFragmentManager
+                    .beginTransaction()
                     .replace(R.id.mainFrame, StartFragment.newInstance())
                     .commit()
-
-                2 -> supportFragmentManager
+                3 -> supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.mainFrame, ReposListFragment.newInstance())
                     .commit()

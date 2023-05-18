@@ -38,11 +38,6 @@ class StartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val savedToken = getAuthToken()
-        if (savedToken != null) {
-            authenticateWithGitHub(savedToken)
-        }
-
         tokenEditText = view.findViewById(R.id.tokenEditText)
         loginButton = view.findViewById(R.id.loginButton)
 
@@ -73,7 +68,7 @@ class StartFragment : Fragment() {
                     if (user != null) {
                         saveAuthToken(token)
                         dataModel.token.value = token
-                        dataModel.fragmentNum.value = 2
+                        dataModel.fragmentNum.value = 1
                     } else {
                         Toast.makeText(
                             activity,
@@ -99,11 +94,6 @@ class StartFragment : Fragment() {
         val editor = sharedPreferences?.edit()
         editor?.putString("token", token)
         editor?.apply()
-    }
-
-    private fun getAuthToken(): String? {
-        val sharedPreferences = activity?.getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences?.getString("token", null)
     }
     companion object {
         fun newInstance() = StartFragment()
