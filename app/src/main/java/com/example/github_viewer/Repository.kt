@@ -1,10 +1,9 @@
 package com.example.github_viewer
 
-data class Repository (
+data class RepositoryDetails(
     val name: String,
     val description: String,
-)
-data class RepositoryDetails(
+    val language: String,
     val forks: Int,
     val stars: Int,
     val watchers: Int,

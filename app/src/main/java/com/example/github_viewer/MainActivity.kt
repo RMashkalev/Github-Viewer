@@ -3,7 +3,6 @@ package com.example.github_viewer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
 
 class MainActivity : AppCompatActivity() {
     private val dataModel: DataModel by viewModels()
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                     .commit()
                 3 -> supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.mainFrame, ReposListFragment.newInstance())
+                    .replace(R.id.mainFrame, RepositoryListFragment.newInstance())
                     .commit()
             }
         }
