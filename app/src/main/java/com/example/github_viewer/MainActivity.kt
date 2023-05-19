@@ -1,5 +1,6 @@
 package com.example.github_viewer
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -36,8 +37,15 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }
         }
-
-
     }
 
+    override fun onDestroy() {
+        if(dataModel.tokenSave.value == 0) {
+            val sharedPreferences = getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.remove("token")
+            editor.apply()
+        }
+        super.onDestroy()
+    }
 }

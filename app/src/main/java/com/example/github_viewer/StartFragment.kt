@@ -71,11 +71,12 @@ class StartFragment : Fragment() {
                     if (user != null) {
                         dataModel.token.value = token
                         if (switchButton.isChecked) {
-                            saveAuthToken(token)
-                            dataModel.fragmentNum.value = 1
+                            dataModel.tokenSave.value = 1
                         } else {
-                            dataModel.fragmentNum.value = 3
+                            dataModel.tokenSave.value = 0
                         }
+                        saveAuthToken(token)
+                        dataModel.fragmentNum.value = 1
                     } else {
                         Toast.makeText(
                             activity,
