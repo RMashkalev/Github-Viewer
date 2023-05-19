@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
-    android:onClick="goToRepository"
     >
 
     <TextView
@@ -54,5 +53,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/repositoryNameTextView"
         tools:ignore="MissingConstraints" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@+id/repositoryDescriptionTextView"
+        android:layout_marginTop="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

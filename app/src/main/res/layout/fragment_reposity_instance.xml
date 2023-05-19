@@ -7,8 +7,230 @@
     tools:context=".RepositoryInstanceFragment">
 
     <TextView
+        android:id="@+id/NameTextView"
         android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#474747"
+        android:gravity="center"
+        android:text="Name"
+        android:textColor="#CC99D5"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/LinkImageView"
+        android:layout_marginTop="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/link_svg"
+        android:padding="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/NameTextView"
+        tools:ignore="MissingConstraints"
+        app:tint="#6FA8FF" />
+
+    <TextView
+        android:id="@+id/HtmlTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="#6FA8FF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/LinkImageView"
+        app:layout_constraintTop_toTopOf="@+id/LinkImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/LinkImageView"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/LicenseImageView"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="25dp"
+        android:src="@drawable/scales_svg"
+        app:tint="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@+id/HtmlTextView"
+        tools:ignore="MissingConstraints" />
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="License"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/LicenseImageView"
+        app:layout_constraintTop_toTopOf="@+id/LicenseImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/LicenseImageView"
+        tools:ignore="MissingConstraints" />
+    <TextView
+        android:id="@+id/LicenseTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/dividerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView11"
+        app:layout_constraintBottom_toBottomOf="@+id/textView11"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintWidth_max="0dp"
+        tools:ignore="MissingConstraints" />
+
+    <View
+        android:id="@+id/dividerView"
+        android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="#FFFFFF"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/StarImageView"
+        android:src="@drawable/star_svg"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="25dp"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@+id/LicenseImageView"
+        app:tint="#FFC800" />
+
+    <TextView
+        android:id="@+id/StarsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:text="TextView"
+        android:textColor="#FFC800"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toEndOf="@+id/StarImageView"
+        app:layout_constraintTop_toTopOf="@+id/StarImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/StarImageView"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textViewStars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:padding="4dp"
+        android:text="stars"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/StarsTextView"
+        app:layout_constraintTop_toTopOf="@+id/StarsTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/StarsTextView"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/ForkImageView"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/git_fork_bold_svg"
+        app:layout_constraintStart_toEndOf="@+id/textViewStars"
+        app:layout_constraintTop_toTopOf="@+id/textViewStars"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewStars"
+        android:layout_marginStart="22dp"
+        tools:ignore="MissingConstraints"
+        app:tint="#00FF73" />
+    <TextView
+        android:id="@+id/ForksTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:text="TextView"
+        android:textColor="#00FF73"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toEndOf="@+id/ForkImageView"
+        app:layout_constraintTop_toTopOf="@+id/ForkImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/ForkImageView" />
+    <TextView
+        android:id="@+id/textViewForks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:padding="4dp"
+        android:text="forks"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/ForksTextView"
+        app:layout_constraintTop_toTopOf="@+id/ForksTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/ForksTextView"
+        tools:ignore="MissingConstraints" />
+    <ImageView
+        android:id="@+id/WatchersImageView"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/eye_svg"
+        app:layout_constraintStart_toEndOf="@+id/textViewForks"
+        app:layout_constraintTop_toTopOf="@+id/textViewForks"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewForks"
+        android:layout_marginStart="22dp"
+        tools:ignore="MissingConstraints"
+        app:tint="#93FFE9" />
+
+    <TextView
+        android:id="@+id/WatchersTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="#93FFE9"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/WatchersImageView"
+        app:layout_constraintStart_toEndOf="@+id/WatchersImageView"
+        app:layout_constraintTop_toTopOf="@+id/WatchersImageView" />
+    <TextView
+        android:id="@+id/textViewWatchers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:padding="4dp"
+        android:text="watchers"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/WatchersTextView"
+        app:layout_constraintTop_toTopOf="@+id/WatchersTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/WatchersTextView"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textViewDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:padding="5dp"
+        android:gravity="left"
+        android:textSize="20sp"
+        android:text="Description:"
+        app:layout_constraintTop_toBottomOf="@+id/StarImageView"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/DescriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="4dp"
+        android:padding="5dp"
+        android:text="Description"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDescription"
+        tools:ignore="MissingConstraints" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

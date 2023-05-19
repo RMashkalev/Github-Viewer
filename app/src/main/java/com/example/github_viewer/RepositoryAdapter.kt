@@ -1,12 +1,11 @@
 package com.example.github_viewer
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.github_viewer.RepositoryDetails
 
 class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
 
@@ -25,6 +24,15 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
     override fun onBindViewHolder(holder: RepositoryViewHolder, position: Int) {
         val repository = repositories[position]
         holder.bind(repository)
+        holder.itemView.setOnClickListener {
+            val repositoryInstanceFragment = RepositoryInstanceFragment.newInstance(repository)
+
+            val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
+            fragmentManager.beginTransaction()
+                .replace(R.id.mainFrame, repositoryInstanceFragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun getItemCount(): Int {
