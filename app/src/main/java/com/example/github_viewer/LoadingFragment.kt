@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.concurrent.thread
 
 class LoadingFragment : Fragment() {
     private val dataModel: DataModel by activityViewModels()

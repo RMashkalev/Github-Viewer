@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class StartFragment : Fragment() {
     private lateinit var tokenEditText: EditText
     private lateinit var loginButton: Button
+    private lateinit var switchButton: Switch
     private lateinit var apiService: GitHubApiService
     private val YOUR_REQUEST_CODE = 1
     private val dataModel: DataModel by activityViewModels()
@@ -40,6 +42,7 @@ class StartFragment : Fragment() {
 
         tokenEditText = view.findViewById(R.id.tokenEditText)
         loginButton = view.findViewById(R.id.loginButton)
+        switchButton = view.findViewById(R.id.saveSwitch)
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.github.com/")
@@ -66,9 +69,13 @@ class StartFragment : Fragment() {
                 if (response.isSuccessful) {
                     val user = response.body()
                     if (user != null) {
-                        saveAuthToken(token)
                         dataModel.token.value = token
-                        dataModel.fragmentNum.value = 1
+                        if (switchButton.isChecked) {
+                            saveAuthToken(token)
+                            dataModel.fragmentNum.value = 1
+                        } else {
+                            dataModel.fragmentNum.value = 3
+                        }
                     } else {
                         Toast.makeText(
                             activity,
@@ -89,12 +96,14 @@ class StartFragment : Fragment() {
             }
         }
     }
+
     private fun saveAuthToken(token: String) {
         val sharedPreferences = activity?.getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences?.edit()
         editor?.putString("token", token)
         editor?.apply()
     }
+
     companion object {
         fun newInstance() = StartFragment()
     }
