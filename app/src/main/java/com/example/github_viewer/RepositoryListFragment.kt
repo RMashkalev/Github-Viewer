@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +19,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RepositoryListFragment : Fragment() {
-    private lateinit var exitButton: Button
+    private lateinit var exitButton: ImageView
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RepositoryAdapter
     private lateinit var apiService: GitHubApiService
