@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 
 class MainActivity : AppCompatActivity() {
@@ -43,8 +44,16 @@ class MainActivity : AppCompatActivity() {
                     .beginTransaction()
                     .replace(R.id.mainFrame, RepositoryListFragment.newInstance())
                     .commit()
+                4 -> supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.mainFrame, RepositoryInstanceFragment.newInstance())
+                    .commit()
             }
         }
+    }
+
+    fun goToRepository(view: View) {
+        dataModel.fragmentNum.value = 4
     }
     private fun getAuthToken(): String? {
         val sharedPreferences = getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE)
