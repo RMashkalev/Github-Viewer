@@ -8,8 +8,8 @@ data class RepositoryDetails(
     val description: String,
     val language: String,
     val forks: Int,
-    val stars: Int,
     val watchers: Int,
+    val stargazers_count: Int,
     val html_url: String,
     val license: License?,
     val readme: String
@@ -32,7 +32,7 @@ data class RepositoryDetails(
         parcel.writeString(description)
         parcel.writeString(language)
         parcel.writeInt(forks)
-        parcel.writeInt(stars)
+        parcel.writeInt(stargazers_count)
         parcel.writeInt(watchers)
         parcel.writeString(html_url)
         parcel.writeParcelable(license, flags)

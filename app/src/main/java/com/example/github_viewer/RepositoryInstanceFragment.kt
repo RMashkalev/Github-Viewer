@@ -32,7 +32,7 @@ class RepositoryInstanceFragment : Fragment() {
             view.findViewById<TextView>(R.id.DescriptionTextView).text = repo.description
             view.findViewById<TextView>(R.id.HtmlTextView).text = repo.html_url
             view.findViewById<TextView>(R.id.LicenseTextView).text = repo.license?.name.toString()
-            view.findViewById<TextView>(R.id.StarsTextView).text = repo.stars.toString()
+            view.findViewById<TextView>(R.id.StarsTextView).text = repo.stargazers_count.toString()
             view.findViewById<TextView>(R.id.ForksTextView).text = repo.forks.toString()
             view.findViewById<TextView>(R.id.WatchersTextView).text = repo.watchers.toString()
         }
