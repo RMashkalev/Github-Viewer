@@ -1,6 +1,8 @@
 package com.example.github_viewer
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -34,6 +36,12 @@ class RepositoryInstanceFragment : Fragment() {
             view.findViewById<TextView>(R.id.ForksTextView).text = repo.forks.toString()
             view.findViewById<TextView>(R.id.WatchersTextView).text = repo.watchers.toString()
         }
+        view.findViewById<TextView>(R.id.HtmlTextView).setOnClickListener {
+            val url = view.findViewById<TextView>(R.id.HtmlTextView).text.toString()
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        }
+
 
 
         return view
