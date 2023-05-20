@@ -12,6 +12,7 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
     private val repositories: MutableList<RepositoryDetails> = mutableListOf()
 
     fun setRepositories(list: List<RepositoryDetails>) {
+        repositories.clear()
         repositories.addAll(list)
         notifyDataSetChanged()
     }
