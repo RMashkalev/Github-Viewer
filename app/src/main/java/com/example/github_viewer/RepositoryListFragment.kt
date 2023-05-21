@@ -203,11 +203,11 @@ class RepositoryListFragment : Fragment() {
             adapter.setRepositories(pagingRepositoryList)
         }
         endButton.setOnClickListener {
-            start = (maxPos / step) * step
+            start = maxPage * step
             dataModel.start.value = start
             end = maxPos
             dataModel.end.value = end
-            page = maxPos / step
+            page = maxPage
             dataModel.page.value = page
             navigationChange()
             resetRepos()
@@ -244,7 +244,7 @@ class RepositoryListFragment : Fragment() {
             } else {
                 maxPos
             }
-            maxPage = maxPos / step
+            maxPage = (maxPos - 1) / step
             dataModel.maxPage.value = maxPage
             dataModel.flag.value = true
         }
