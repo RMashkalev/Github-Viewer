@@ -166,8 +166,6 @@ class RepositoryListFragment : Fragment() {
                 dataModel.start.value = start
                 end = step
                 dataModel.end.value = end
-                page--
-                dataModel.page.value = page
             }
             navigationChange()
             resetRepos()
