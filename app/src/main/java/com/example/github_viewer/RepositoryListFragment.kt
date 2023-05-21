@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +17,8 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,8 +48,11 @@ class RepositoryListFragment : Fragment() {
     private var page = 0
     private var maxPage = 0
     private var flag: Boolean = false
-
     private val dataModel: DataModel by activityViewModels()
+
+    private val sharedPrefName = "MySharedPref"
+    private val favoriteRepoKey = "FavoriteRepoList"
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,6 +83,15 @@ class RepositoryListFragment : Fragment() {
         val searchEditText = view.findViewById<EditText>(R.id.SearchEditText)
         val repositoryListText = view.findViewById<TextView>(R.id.textView)
 
+        loadFavoriteRepositories()
+
+        savedInstanceState?.let { bundle ->
+            val savedFavoriteList = bundle.getParcelableArrayList<RepositoryDetails>("favoriteRepositoryList")
+            savedFavoriteList?.let {
+                favoriteRepositoryList = it.toMutableList()
+            }
+        }
+
         adapter.setOnItemClickListener(object : RepositoryAdapter.OnItemClickListener {
             override fun onHeartClick(repository: RepositoryDetails) {
                 if (favoriteRepositoryList.contains(repository)) {
@@ -87,10 +100,21 @@ class RepositoryListFragment : Fragment() {
                     favoriteRepositoryList.add(repository)
                 }
                 adapter.notifyDataSetChanged()
+                saveFavoriteRepositories()
             }
         })
         allButton.setOnClickListener {
             updateRepositoryList()
+            for (pagingRepository in pagingRepositoryList) {
+                for (favoriteRepository in favoriteRepositoryList) {
+                    if (pagingRepository.name == favoriteRepository.name) {
+                        pagingRepository.isFavorite = favoriteRepository.isFavorite
+                    }
+                    if (pagingRepository.name != favoriteRepository.name) {
+                        pagingRepository.isFavorite = false
+                    }
+                }
+            }
         }
 
         favouriteButton.setOnClickListener {
@@ -147,6 +171,13 @@ class RepositoryListFragment : Fragment() {
                         val repositories = response.body()
                         if (repositories != null) {
                             originalRepositoryList = repositories.toMutableList()
+                            for (originalRepository in originalRepositoryList) {
+                                for (favoriteRepository in favoriteRepositoryList) {
+                                    if (originalRepository.name == favoriteRepository.name) {
+                                        originalRepository.isFavorite = favoriteRepository.isFavorite
+                                    }
+                                }
+                            }
                             setDataOriginal()
                             navigationChange()
                             resetRepos(originalRepositoryList)
@@ -388,6 +419,22 @@ class RepositoryListFragment : Fragment() {
             }
         }
     }
+    private fun saveFavoriteRepositories() {
+        val sharedPreferences = activity?.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        val gson = Gson()
+        val json = gson.toJson(favoriteRepositoryList)
+        editor?.putString(favoriteRepoKey, json)
+        editor?.apply()
+    }
+
+    private fun loadFavoriteRepositories() {
+        val sharedPreferences = activity?.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = sharedPreferences?.getString(favoriteRepoKey, null)
+        val type = object : TypeToken<List<RepositoryDetails>>() {}.type
+        favoriteRepositoryList = gson.fromJson(json, type) ?: mutableListOf()
+    }
 
     private fun updateRepositoryList() {
         val selectedList = if (favouriteButton.isChecked) {
@@ -429,8 +476,8 @@ class RepositoryListFragment : Fragment() {
             }
         } else if (favouriteButton.isChecked) {
             if (repositoryName.isNotBlank()) {
-                for (repository in originalRepositoryList) {
-                    if (favoriteRepositoryList.contains(repository) && repository.name.contains(repositoryName, ignoreCase = true)) {
+                for (repository in favoriteRepositoryList) {
+                    if (repository.name.contains(repositoryName, ignoreCase = true)) {
                         filteredList.add(repository)
                     }
                 }

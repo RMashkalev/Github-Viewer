@@ -12,7 +12,8 @@ data class RepositoryDetails(
     val stargazers_count: Int,
     val html_url: String,
     val license: License?,
-    val readme: String
+    val readme: String,
+    var isFavorite: Boolean
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -24,7 +25,8 @@ data class RepositoryDetails(
         parcel.readInt(),
         parcel.readString() ?: "",
         parcel.readParcelable(License::class.java.classLoader),
-        parcel.readString() ?: ""
+        parcel.readString() ?: "",
+        parcel.readByte() != 0.toByte()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -37,6 +39,7 @@ data class RepositoryDetails(
         parcel.writeString(html_url)
         parcel.writeParcelable(license, flags)
         parcel.writeString(readme)
+        parcel.writeByte(if (isFavorite) 1 else 0)
     }
 
     override fun describeContents(): Int {

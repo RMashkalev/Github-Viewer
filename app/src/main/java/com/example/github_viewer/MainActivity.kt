@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import androidx.activity.viewModels
 
 class MainActivity : AppCompatActivity() {
@@ -51,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                     .commit()
                 4 -> supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.mainFrame, RepositoryInstanceFragment.newInstance(repository = RepositoryDetails("", "", "", 0, 0, 0, "", null, "")))
+                    .replace(R.id.mainFrame, RepositoryInstanceFragment.newInstance(repository = RepositoryDetails("", "", "", 0, 0, 0, "", null, "", false)))
                     .commit()
             }
         }
