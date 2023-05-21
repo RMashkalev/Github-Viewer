@@ -232,5 +232,14 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewDescription"
         tools:ignore="MissingConstraints" />
 
+        <ImageView
+        android:id="@+id/buttonBack"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/left_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/NameTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/NameTextView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

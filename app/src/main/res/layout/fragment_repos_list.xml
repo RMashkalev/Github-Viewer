@@ -65,6 +65,52 @@
         app:layout_constraintTop_toTopOf="@id/searchButton"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <Button
+        android:id="@+id/prevButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="&lt;"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/startButton" />
+
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="&gt;"
+        app:layout_constraintBottom_toBottomOf="@+id/prevButton"
+        app:layout_constraintEnd_toStartOf="@+id/endButton"
+        app:layout_constraintTop_toTopOf="@+id/prevButton"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="(0).."
+        app:layout_constraintBottom_toBottomOf="@+id/prevButton"
+        app:layout_constraintEnd_toStartOf="@+id/nextButton"
+        app:layout_constraintStart_toEndOf="@+id/prevButton"
+        app:layout_constraintTop_toTopOf="@+id/prevButton" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="&lt;&lt;"
+        app:layout_constraintBottom_toBottomOf="@+id/prevButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/prevButton" />
+
+    <Button
+        android:id="@+id/endButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="4dp"
+        android:text="&gt;&gt;"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/nextButton" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

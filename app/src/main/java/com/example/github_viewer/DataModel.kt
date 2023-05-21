@@ -15,4 +15,28 @@ open class DataModel : ViewModel() {
     val tokenSave: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
     }
+
+    val start: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
+    val end: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
+    val step: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
+    val flag: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+
+    val page: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
+    val maxPage: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
 }

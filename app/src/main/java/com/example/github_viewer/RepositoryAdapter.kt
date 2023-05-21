@@ -8,9 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 
 class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
-
     private val repositories: MutableList<RepositoryDetails> = mutableListOf()
-
     fun setRepositories(list: List<RepositoryDetails>) {
         repositories.clear()
         repositories.addAll(list)
@@ -18,7 +16,8 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepositoryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_repository, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_repository, parent, false)
         return RepositoryViewHolder(view)
     }
 
@@ -28,10 +27,10 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
         holder.itemView.setOnClickListener {
             val repositoryInstanceFragment = RepositoryInstanceFragment.newInstance(repository)
 
-            val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
+            val fragmentManager =
+                (holder.itemView.context as AppCompatActivity).supportFragmentManager
             fragmentManager.beginTransaction()
                 .replace(R.id.mainFrame, repositoryInstanceFragment)
-                .addToBackStack(null)
                 .commit()
         }
     }
@@ -42,8 +41,10 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
 
     inner class RepositoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.repositoryNameTextView)
-        private val descriptionTextView: TextView = itemView.findViewById(R.id.repositoryDescriptionTextView)
-        private val languageTextView: TextView = itemView.findViewById(R.id.repositoryLanguageTextView)
+        private val descriptionTextView: TextView =
+            itemView.findViewById(R.id.repositoryDescriptionTextView)
+        private val languageTextView: TextView =
+            itemView.findViewById(R.id.repositoryLanguageTextView)
 
         fun bind(repository: RepositoryDetails) {
             nameTextView.text = repository.name

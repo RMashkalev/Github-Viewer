@@ -4,14 +4,19 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.activity.viewModels
 
 class MainActivity : AppCompatActivity() {
     private val dataModel: DataModel by viewModels()
     private lateinit var token: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        dataModel.flag.value = false
+        dataModel.step.value = 4
+        dataModel.page.value = 0
         setContentView(R.layout.activity_main)
         val tokenValue = getAuthToken()
         if (tokenValue == null) {
@@ -49,8 +54,8 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }
         }
-    }
 
+    }
     private fun getAuthToken(): String? {
         val sharedPreferences = getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE)
         return sharedPreferences?.getString("token", null)

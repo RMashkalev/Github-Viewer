@@ -8,10 +8,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 
 class RepositoryInstanceFragment : Fragment() {
     private var repository: RepositoryDetails? = null
+    private lateinit var backButton: ImageView
+    private val dataModel: DataModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,14 +46,15 @@ class RepositoryInstanceFragment : Fragment() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         }
-
-
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        backButton = view.findViewById(R.id.buttonBack)
+        backButton.setOnClickListener {
+            dataModel.fragmentNum.value = 3
+        }
     }
 
     companion object {
