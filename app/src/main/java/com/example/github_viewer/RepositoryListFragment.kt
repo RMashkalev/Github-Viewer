@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -34,9 +35,12 @@ class RepositoryListFragment : Fragment() {
     private lateinit var nextButton: Button
     private lateinit var startButton: Button
     private lateinit var endButton: Button
+    private lateinit var allButton: RadioButton
+    private lateinit var favouriteButton: RadioButton
     private lateinit var navigation: TextView
     private lateinit var originalRepositoryList: MutableList<RepositoryDetails>
     private lateinit var pagingRepositoryList: MutableList<RepositoryDetails>
+    private var favoriteRepositoryList: MutableList<RepositoryDetails> = mutableListOf()
     private var maxPos: Int = 0
     private var start = 0
     private var end = 0
@@ -57,6 +61,7 @@ class RepositoryListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        favouriteButton = view.findViewById(R.id.favoriteButton)
         exitButton = view.findViewById(R.id.button_exit)
         recyclerView = view.findViewById(R.id.recyclerView)
         prevButton = view.findViewById(R.id.prevButton)
@@ -71,6 +76,26 @@ class RepositoryListFragment : Fragment() {
         val searchButton = view.findViewById<ImageView>(R.id.searchButton)
         val searchEditText = view.findViewById<EditText>(R.id.SearchEditText)
         val repositoryListText = view.findViewById<TextView>(R.id.textView)
+        allButton = view.findViewById(R.id.allButton)
+        favouriteButton = view.findViewById(R.id.favoriteButton)
+
+        adapter.setOnItemClickListener(object : RepositoryAdapter.OnItemClickListener {
+            override fun onHeartClick(repository: RepositoryDetails) {
+                if (favoriteRepositoryList.contains(repository)) {
+                    favoriteRepositoryList.remove(repository)
+                } else {
+                    favoriteRepositoryList.add(repository)
+                }
+                adapter.notifyDataSetChanged()
+            }
+        })
+        allButton.setOnClickListener {
+            updateRepositoryList()
+        }
+
+        favouriteButton.setOnClickListener {
+            updateRepositoryList()
+        }
 
         searchButton.setOnClickListener {
             if (searchEditText.visibility == View.VISIBLE) {
@@ -268,6 +293,14 @@ class RepositoryListFragment : Fragment() {
         }
     }
 
+    private fun updateRepositoryList() {
+        val selectedList = if (favouriteButton.isChecked) {
+            favoriteRepositoryList
+        } else {
+            pagingRepositoryList
+        }
+        adapter.setRepositories(selectedList)
+    }
     private fun resetRepos() {
         pagingRepositoryList = originalRepositoryList.subList(start, end)
 
@@ -288,18 +321,29 @@ class RepositoryListFragment : Fragment() {
     private fun performSearch(repositoryName: String) {
         val filteredList = mutableListOf<RepositoryDetails>()
 
-        if (repositoryName != "") {
-            for (repository in originalRepositoryList) {
-                if (repository.name.contains(repositoryName, ignoreCase = true)) {
-                    filteredList.add(repository)
+        if (allButton.isChecked) {
+            if (repositoryName.isNotBlank()) {
+                for (repository in originalRepositoryList) {
+                    if (repository.name.contains(repositoryName, ignoreCase = true)) {
+                        filteredList.add(repository)
+                    }
                 }
+            } else {
+                filteredList.addAll(originalRepositoryList)
             }
-
-            adapter.setRepositories(filteredList)
-        } else {
-            adapter.setRepositories(pagingRepositoryList)
+        } else if (favouriteButton.isChecked) {
+            if (repositoryName.isNotBlank()) {
+                for (repository in originalRepositoryList) {
+                    if (favoriteRepositoryList.contains(repository) && repository.name.contains(repositoryName, ignoreCase = true)) {
+                        filteredList.add(repository)
+                    }
+                }
+            } else {
+                filteredList.addAll(favoriteRepositoryList)
+            }
         }
 
+        adapter.setRepositories(filteredList)
     }
 
 

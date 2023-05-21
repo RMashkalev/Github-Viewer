@@ -3,12 +3,14 @@ package com.example.github_viewer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 
 class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
     private val repositories: MutableList<RepositoryDetails> = mutableListOf()
+    private var onItemClickListener: OnItemClickListener? = null
     fun setRepositories(list: List<RepositoryDetails>) {
         repositories.clear()
         repositories.addAll(list)
@@ -45,11 +47,23 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
             itemView.findViewById(R.id.repositoryDescriptionTextView)
         private val languageTextView: TextView =
             itemView.findViewById(R.id.repositoryLanguageTextView)
+        private val heartImageView: ImageView = itemView.findViewById(R.id.HeartImageView)
 
+        init {
+            heartImageView.setOnClickListener {
+                onItemClickListener?.onHeartClick(repositories[adapterPosition])
+            }
+        }
         fun bind(repository: RepositoryDetails) {
             nameTextView.text = repository.name
             descriptionTextView.text = repository.description
             languageTextView.text = repository.language
         }
+    }
+    interface OnItemClickListener {
+        fun onHeartClick(repository: RepositoryDetails)
+    }
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        onItemClickListener = listener
     }
 }
