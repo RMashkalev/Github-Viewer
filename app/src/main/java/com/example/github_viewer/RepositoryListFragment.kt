@@ -255,13 +255,13 @@ class RepositoryListFragment : Fragment() {
         dataModel.page.observe(viewLifecycleOwner) {
             when (it) {
                 0 -> {
-                    navigation.text = "(0)..$maxPage"
+                    navigation.text = "(1)..${maxPage + 1}"
                 }
                 maxPage -> {
-                    navigation.text = "0..($maxPage)"
+                    navigation.text = "1..(${maxPage + 1})"
                 }
                 else -> {
-                    navigation.text = "0..($page)..$maxPage"
+                    navigation.text = "1..(${page + 1})..${maxPage + 1}"
                 }
             }
 
