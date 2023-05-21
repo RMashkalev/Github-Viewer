@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         dataModel.flag.value = false
+        dataModel.favFlag.value = false
         dataModel.step.value = 4
         dataModel.page.value = 0
         setContentView(R.layout.activity_main)

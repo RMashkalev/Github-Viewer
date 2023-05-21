@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -67,6 +68,9 @@ class RepositoryListFragment : Fragment() {
         startButton = view.findViewById(R.id.startButton)
         endButton = view.findViewById(R.id.endButton)
         navigation = view.findViewById(R.id.navigation)
+        allButton = view.findViewById(R.id.allButton)
+        favouriteButton = view.findViewById(R.id.favoriteButton)
+
         recyclerView.layoutManager = LinearLayoutManager(activity)
         adapter = RepositoryAdapter()
         recyclerView.adapter = adapter
@@ -74,8 +78,6 @@ class RepositoryListFragment : Fragment() {
         val searchButton = view.findViewById<ImageView>(R.id.searchButton)
         val searchEditText = view.findViewById<EditText>(R.id.SearchEditText)
         val repositoryListText = view.findViewById<TextView>(R.id.textView)
-        allButton = view.findViewById(R.id.allButton)
-        favouriteButton = view.findViewById(R.id.favoriteButton)
 
         adapter.setOnItemClickListener(object : RepositoryAdapter.OnItemClickListener {
             override fun onHeartClick(repository: RepositoryDetails) {
@@ -145,9 +147,9 @@ class RepositoryListFragment : Fragment() {
                         val repositories = response.body()
                         if (repositories != null) {
                             originalRepositoryList = repositories.toMutableList()
-                            setData()
+                            setDataOriginal()
                             navigationChange()
-                            resetRepos()
+                            resetRepos(originalRepositoryList)
                             adapter.setRepositories(pagingRepositoryList)
                         } else {
                             Toast.makeText(
@@ -173,72 +175,96 @@ class RepositoryListFragment : Fragment() {
                 }
             }
         }
+        favouriteButton.setOnClickListener {
+            setDataFavorite()
+            navigationChange()
+            resetRepos(favoriteRepositoryList)
+            adapter.setRepositories(pagingRepositoryList)
+        }
+        allButton.setOnClickListener {
+            setDataOriginal()
+            navigationChange()
+            resetRepos(originalRepositoryList)
+            adapter.setRepositories(pagingRepositoryList)
+        }
         prevButton.setOnClickListener {
             if (start >= step) {
                 start -= step
-                dataModel.start.value = start
                 end -= step
                 if (end - start < step) {
                     end += step - (end - start)
                 }
-                dataModel.end.value = end
                 page--
-                dataModel.page.value = page
+            }
+
+            if(allButton.isChecked) {
+                resetRepos(originalRepositoryList)
+                saveDataOriginal()
             } else {
-                start = 0
-                dataModel.start.value = start
-                end = step
-                dataModel.end.value = end
+                resetRepos(favoriteRepositoryList)
+                saveDataFavorite()
             }
             navigationChange()
-            resetRepos()
             adapter.setRepositories(pagingRepositoryList)
         }
         nextButton.setOnClickListener {
             if (end < maxPos - step) {
                 start += step
-                dataModel.start.value = start
                 end += step
-                dataModel.end.value = end
                 page++
-                dataModel.page.value = page
             } else if(end != maxPos) {
                 start = end
-                dataModel.start.value = start
                 end = maxPos
-                dataModel.end.value = end
                 page++
-                dataModel.page.value = page
+            }
+
+            if(allButton.isChecked) {
+                resetRepos(originalRepositoryList)
+                saveDataOriginal()
+            } else {
+                resetRepos(favoriteRepositoryList)
+                saveDataFavorite()
             }
             navigationChange()
-            resetRepos()
             adapter.setRepositories(pagingRepositoryList)
         }
         startButton.setOnClickListener {
             start = 0
-            dataModel.start.value = start
-            end = step
-            dataModel.end.value = end
+            end = if (step < maxPos) {
+                step
+            } else {
+                maxPos
+            }
             page = 0
-            dataModel.page.value = page
+
+            if(allButton.isChecked) {
+                resetRepos(originalRepositoryList)
+                saveDataOriginal()
+            } else {
+                resetRepos(favoriteRepositoryList)
+                saveDataFavorite()
+            }
             navigationChange()
-            resetRepos()
             adapter.setRepositories(pagingRepositoryList)
         }
         endButton.setOnClickListener {
             start = maxPage * step
-            dataModel.start.value = start
             end = maxPos
-            dataModel.end.value = end
             page = maxPage
-            dataModel.page.value = page
+
+            if(allButton.isChecked) {
+                resetRepos(originalRepositoryList)
+                saveDataOriginal()
+            } else {
+                resetRepos(favoriteRepositoryList)
+                saveDataFavorite()
+            }
             navigationChange()
-            resetRepos()
             adapter.setRepositories(pagingRepositoryList)
         }
     }
 
-    private fun setData() {
+    private fun setDataOriginal() {
         maxPos = originalRepositoryList.size
         dataModel.flag.observe(viewLifecycleOwner) {
             flag = it
@@ -260,34 +286,106 @@ class RepositoryListFragment : Fragment() {
             dataModel.maxPage.observe(viewLifecycleOwner) {
                 maxPage = it
             }
-
         } else {
             end = if (maxPos >= step) {
                 step
             } else {
                 maxPos
             }
+            page = 0
             maxPage = (maxPos - 1) / step
-            dataModel.maxPage.value = maxPage
             dataModel.flag.value = true
         }
+        saveDataOriginal()
+    }
 
+    private fun setDataFavorite() {
+        maxPos = favoriteRepositoryList.size
+        dataModel.favFlag.observe(viewLifecycleOwner) {
+            flag = it
+        }
+        dataModel.step.observe(viewLifecycleOwner) {
+            step = it
+        }
+
+        maxPos = favoriteRepositoryList.size
+        start = 0
+        end = if (maxPos >= step) {
+            step
+        } else {
+            maxPos
+        }
+        page = 0
+        maxPage = (maxPos - 1) / step
+        dataModel.favFlag.value = true
+        saveDataFavorite()
+    }
+
+
+
+    private fun saveDataOriginal() {
+        dataModel.start.value = start
+        dataModel.end.value = end
+        dataModel.page.value = page
+        dataModel.maxPage.value = maxPage
+    }
+
+    private fun saveDataFavorite() {
+        dataModel.favStart.value = start
+        dataModel.favEnd.value = end
+        dataModel.favPage.value = page
+        dataModel.favMaxPage.value = maxPage
     }
 
     private fun navigationChange() {
-        dataModel.page.observe(viewLifecycleOwner) {
-            when (it) {
-                0 -> {
-                    navigation.text = "(1)..${maxPage + 1}"
-                }
-                maxPage -> {
-                    navigation.text = "1..(${maxPage + 1})"
-                }
-                else -> {
-                    navigation.text = "1..(${page + 1})..${maxPage + 1}"
+        var page: Int = 0
+        var maxPage: Int = 0
+        if (allButton.isChecked) {
+            dataModel.page.observe(viewLifecycleOwner) {
+                page = it
+            }
+            dataModel.maxPage.observe(viewLifecycleOwner) {
+                maxPage = it
+            }
+        } else {
+            dataModel.favPage.observe(viewLifecycleOwner) {
+                page = it
+            }
+            dataModel.favMaxPage.observe(viewLifecycleOwner) {
+                maxPage = it
+            }
+        }
+
+        when (maxPage) {
+            0 -> {
+                navigation.text = "(1)"
+            }
+            1 -> {
+                when (page) {
+                    0 -> {
+                        navigation.text = "(1) 2"
+                    }
+
+                    1 -> {
+                        navigation.text = "1 (2)"
+                    }
                 }
             }
+            else -> {
+                when (page) {
+                    0 -> {
+                        navigation.text = "(1)..${maxPage + 1}"
+                    }
 
+                    maxPage -> {
+                        navigation.text = "1..(${maxPage + 1})"
+                    }
+
+                    else -> {
+                        navigation.text = "1..(${page + 1})..${maxPage + 1}"
+                    }
+                }
+            }
         }
     }
 
@@ -299,8 +397,8 @@ class RepositoryListFragment : Fragment() {
         }
         adapter.setRepositories(selectedList)
     }
-    private fun resetRepos() {
-        pagingRepositoryList = originalRepositoryList.subList(start, end)
+    private fun resetRepos(list: MutableList<RepositoryDetails>) {
+        pagingRepositoryList = list.subList(start, end)
 
     }
 
