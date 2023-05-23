@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         dataModel.flag.value = false
         dataModel.favFlag.value = false
-        dataModel.step.value = 4
+        dataModel.step.value = 3
         dataModel.page.value = 0
         setContentView(R.layout.activity_main)
         val tokenValue = getAuthToken()

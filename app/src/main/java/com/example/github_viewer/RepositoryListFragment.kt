@@ -396,24 +396,56 @@ class RepositoryListFragment : Fragment() {
                     0 -> {
                         navigation.text = "(1) 2"
                     }
-
                     1 -> {
                         navigation.text = "1 (2)"
+                    }
+                }
+            }
+            2 -> {
+                when (page) {
+                    0 -> {
+                        navigation.text = "(1) 2 3"
+                    }
+                    1 -> {
+                        navigation.text = "1 (2) 3"
+                    }
+                    2 -> {
+                        navigation.text = "1 2 (3)"
+                    }
+                }
+            }
+            3 -> {
+                when (page) {
+                    0 -> {
+                        navigation.text = "(1) 2 3 4"
+                    }
+                    1 -> {
+                        navigation.text = "1 (2) 3 4"
+                    }
+                    2 -> {
+                        navigation.text = "1 2 (3) 4"
+                    }
+                    3 -> {
+                        navigation.text = "1 2 3 (4)"
                     }
                 }
             }
             else -> {
                 when (page) {
                     0 -> {
-                        navigation.text = "(1)..${maxPage + 1}"
+                        navigation.text = "(1) 2 .. ${maxPage + 1}"
                     }
-
+                    1 -> {
+                        navigation.text = "1 (2) 3 .. ${maxPage + 1}"
+                    }
+                    maxPage - 1 -> {
+                        navigation.text = "1 .. ${maxPage - 1} ($maxPage) ${maxPage + 1}"
+                    }
                     maxPage -> {
-                        navigation.text = "1..(${maxPage + 1})"
+                        navigation.text = "1 .. $maxPage (${maxPage + 1})"
                     }
-
                     else -> {
-                        navigation.text = "1..(${page + 1})..${maxPage + 1}"
+                        navigation.text = "1 .. $page (${page + 1}) ${page + 2} ..${maxPage + 1}"
                     }
                 }
             }
