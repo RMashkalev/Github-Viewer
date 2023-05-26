@@ -116,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="(1).."
+        android:text="(1)"
         app:layout_constraintBottom_toBottomOf="@+id/prevButton"
         app:layout_constraintEnd_toStartOf="@+id/nextButton"
         app:layout_constraintStart_toEndOf="@+id/prevButton"

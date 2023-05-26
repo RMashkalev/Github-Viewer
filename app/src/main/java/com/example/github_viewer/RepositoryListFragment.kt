@@ -41,6 +41,7 @@ class RepositoryListFragment : Fragment() {
     private lateinit var originalRepositoryList: MutableList<RepositoryDetails>
     private lateinit var pagingRepositoryList: MutableList<RepositoryDetails>
     private var favoriteRepositoryList: MutableList<RepositoryDetails> = mutableListOf()
+    private var filteredList: MutableList<RepositoryDetails> = mutableListOf()
     private var maxPos: Int = 0
     private var start = 0
     private var end = 0
@@ -48,6 +49,7 @@ class RepositoryListFragment : Fragment() {
     private var page = 0
     private var maxPage = 0
     private var flag: Boolean = false
+    private var searchFlag: Boolean = false
     private val dataModel: DataModel by activityViewModels()
 
     private val sharedPrefName = "MySharedPref"
@@ -86,7 +88,8 @@ class RepositoryListFragment : Fragment() {
         loadFavoriteRepositories()
 
         savedInstanceState?.let { bundle ->
-            val savedFavoriteList = bundle.getParcelableArrayList<RepositoryDetails>("favoriteRepositoryList")
+            val savedFavoriteList =
+                bundle.getParcelableArrayList<RepositoryDetails>("favoriteRepositoryList")
             savedFavoriteList?.let {
                 favoriteRepositoryList = it.toMutableList()
             }
@@ -129,6 +132,7 @@ class RepositoryListFragment : Fragment() {
                 } else {
                     Toast.makeText(activity, "Please enter a repository name", Toast.LENGTH_SHORT)
                         .show()
+
                 }
             } else {
                 searchEditText.visibility = View.VISIBLE
@@ -144,9 +148,19 @@ class RepositoryListFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
+                if (s.toString().isEmpty()) {
+                    searchFlag = false
+                    if (allButton.isChecked) {
+                        setDataOriginal()
+                        resetRepos(originalRepositoryList)
+                    } else {
+                        setDataFavorite()
+                        resetRepos(favoriteRepositoryList)
+                    }
+                }
+                navigationChange()
             }
         })
-
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.github.com/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -174,7 +188,8 @@ class RepositoryListFragment : Fragment() {
                             for (originalRepository in originalRepositoryList) {
                                 for (favoriteRepository in favoriteRepositoryList) {
                                     if (originalRepository.name == favoriteRepository.name) {
-                                        originalRepository.isFavorite = favoriteRepository.isFavorite
+                                        originalRepository.isFavorite =
+                                            favoriteRepository.isFavorite
                                     }
                                 }
                             }
@@ -228,7 +243,9 @@ class RepositoryListFragment : Fragment() {
                 page--
             }
 
-            if(allButton.isChecked) {
+            if (searchFlag) {
+                resetRepos(filteredList)
+            } else if (allButton.isChecked) {
                 resetRepos(originalRepositoryList)
                 saveDataOriginal()
             } else {
@@ -243,13 +260,15 @@ class RepositoryListFragment : Fragment() {
                 start += step
                 end += step
                 page++
-            } else if(end != maxPos) {
+            } else if (end != maxPos) {
                 start = end
                 end = maxPos
                 page++
             }
 
-            if(allButton.isChecked) {
+            if (searchFlag) {
+                resetRepos(filteredList)
+            } else if (allButton.isChecked) {
                 resetRepos(originalRepositoryList)
                 saveDataOriginal()
             } else {
@@ -268,7 +287,9 @@ class RepositoryListFragment : Fragment() {
             }
             page = 0
 
-            if(allButton.isChecked) {
+            if (searchFlag) {
+                resetRepos(filteredList)
+            } else if (allButton.isChecked) {
                 resetRepos(originalRepositoryList)
                 saveDataOriginal()
             } else {
@@ -283,7 +304,9 @@ class RepositoryListFragment : Fragment() {
             end = maxPos
             page = maxPage
 
-            if(allButton.isChecked) {
+            if (searchFlag) {
+                resetRepos(filteredList)
+            } else if (allButton.isChecked) {
                 resetRepos(originalRepositoryList)
                 saveDataOriginal()
             } else {
@@ -353,7 +376,6 @@ class RepositoryListFragment : Fragment() {
     }
 
 
-
     private fun saveDataOriginal() {
         dataModel.start.value = start
         dataModel.end.value = end
@@ -371,79 +393,96 @@ class RepositoryListFragment : Fragment() {
     private fun navigationChange() {
         var page: Int = 0
         var maxPage: Int = 0
-        if (allButton.isChecked) {
-            dataModel.page.observe(viewLifecycleOwner) {
-                page = it
+        if (searchFlag) {
+            page = this.page
+            maxPage = this.maxPage
+        } else if (allButton.isChecked) {
+                dataModel.page.observe(viewLifecycleOwner) {
+                    page = it
+                }
+                dataModel.maxPage.observe(viewLifecycleOwner) {
+                    maxPage = it
+                }
+            } else {
+                dataModel.favPage.observe(viewLifecycleOwner) {
+                    page = it
+                }
+                dataModel.favMaxPage.observe(viewLifecycleOwner) {
+                    maxPage = it
+                }
             }
-            dataModel.maxPage.observe(viewLifecycleOwner) {
-                maxPage = it
-            }
-        } else {
-            dataModel.favPage.observe(viewLifecycleOwner) {
-                page = it
-            }
-            dataModel.favMaxPage.observe(viewLifecycleOwner) {
-                maxPage = it
-            }
-        }
 
         when (maxPage) {
             0 -> {
                 navigation.text = "(1)"
             }
+
             1 -> {
                 when (page) {
                     0 -> {
                         navigation.text = "(1) 2"
                     }
+
                     1 -> {
                         navigation.text = "1 (2)"
                     }
                 }
             }
+
             2 -> {
                 when (page) {
                     0 -> {
                         navigation.text = "(1) 2 3"
                     }
+
                     1 -> {
                         navigation.text = "1 (2) 3"
                     }
+
                     2 -> {
                         navigation.text = "1 2 (3)"
                     }
                 }
             }
+
             3 -> {
                 when (page) {
                     0 -> {
                         navigation.text = "(1) 2 3 4"
                     }
+
                     1 -> {
                         navigation.text = "1 (2) 3 4"
                     }
+
                     2 -> {
                         navigation.text = "1 2 (3) 4"
                     }
+
                     3 -> {
                         navigation.text = "1 2 3 (4)"
                     }
                 }
             }
+
             else -> {
                 when (page) {
                     0 -> {
                         navigation.text = "(1) 2 .. ${maxPage + 1}"
                     }
+
                     1 -> {
                         navigation.text = "1 (2) 3 .. ${maxPage + 1}"
                     }
+
                     maxPage - 1 -> {
                         navigation.text = "1 .. ${maxPage - 1} ($maxPage) ${maxPage + 1}"
                     }
+
                     maxPage -> {
                         navigation.text = "1 .. $maxPage (${maxPage + 1})"
                     }
+
                     else -> {
                         navigation.text = "1 .. $page (${page + 1}) ${page + 2} ..${maxPage + 1}"
                     }
@@ -451,6 +490,7 @@ class RepositoryListFragment : Fragment() {
             }
         }
     }
+
     private fun saveFavoriteRepositories() {
         val sharedPreferences = activity?.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
         val editor = sharedPreferences?.edit()
@@ -476,9 +516,9 @@ class RepositoryListFragment : Fragment() {
         }
         adapter.setRepositories(selectedList)
     }
+
     private fun resetRepos(list: MutableList<RepositoryDetails>) {
         pagingRepositoryList = list.subList(start, end)
-
     }
 
     private fun clearAuthToken() {
@@ -494,8 +534,7 @@ class RepositoryListFragment : Fragment() {
     }
 
     private fun performSearch(repositoryName: String) {
-        val filteredList = mutableListOf<RepositoryDetails>()
-
+        filteredList.clear()
         if (allButton.isChecked) {
             if (repositoryName.isNotBlank()) {
                 for (repository in originalRepositoryList) {
@@ -506,6 +545,18 @@ class RepositoryListFragment : Fragment() {
             } else {
                 filteredList.addAll(originalRepositoryList)
             }
+            maxPos = filteredList.size
+            start = 0
+            end = if (maxPos >= step) {
+                step
+            } else {
+                maxPos
+            }
+            page = 0
+            maxPage = (maxPos - 1) / step
+            searchFlag = true
+            resetRepos(filteredList)
+
         } else if (favouriteButton.isChecked) {
             if (repositoryName.isNotBlank()) {
                 for (repository in favoriteRepositoryList) {
@@ -516,9 +567,20 @@ class RepositoryListFragment : Fragment() {
             } else {
                 filteredList.addAll(favoriteRepositoryList)
             }
+            maxPos = filteredList.size
+            start = 0
+            end = if (maxPos >= step) {
+                step
+            } else {
+                maxPos
+            }
+            page = 0
+            maxPage = (maxPos - 1) / step
+            searchFlag = true
+            resetRepos(filteredList)
         }
 
-        adapter.setRepositories(filteredList)
+        adapter.setRepositories(pagingRepositoryList)
     }
 
 
